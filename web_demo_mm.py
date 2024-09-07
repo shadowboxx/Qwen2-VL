@@ -11,7 +11,7 @@ from threading import Thread
 import gradio as gr
 import torch
 from qwen_vl_utils import process_vision_info
-from transformers import AutoProcessor, Qwen2VLForConditionalGeneration, TextIteratorStreamer
+from transformers import AutoProcessor, Qwen2VLForConditionalGeneration, TextIteratorStreamer , BitsAndBytesConfig
 
 DEFAULT_CKPT_PATH = 'Qwen/Qwen2-VL-7B-Instruct'
 
@@ -49,16 +49,28 @@ def _load_model_processor(args):
     if args.cpu_only:
         device_map = 'cpu'
     else:
-        device_map = 'auto'
+        device_map = 'cuda'
 
+    nf4_config = BitsAndBytesConfig(
+        load_in_4bit=True,
+        bnb_4bit_quant_type="nf4",
+        bnb_4bit_use_double_quant=True,
+        bnb_4bit_compute_dtype=torch.bfloat16
+        )
+    
     # Check if flash-attn2 flag is enabled and load model accordingly
     if args.flash_attn2:
         model = Qwen2VLForConditionalGeneration.from_pretrained(args.checkpoint_path,
                                                                 torch_dtype='auto',
                                                                 attn_implementation='flash_attention_2',
-                                                                device_map=device_map)
+                                                                device_map=device_map,
+                                                                # quantization_config=nf4_config
+                                                                )
     else:
-        model = Qwen2VLForConditionalGeneration.from_pretrained(args.checkpoint_path, device_map=device_map)
+        model = Qwen2VLForConditionalGeneration.from_pretrained(args.checkpoint_path, 
+                                                                device_map=device_map,
+                                                                # quantization_config=nf4_config
+                                                                )
 
     processor = AutoProcessor.from_pretrained(args.checkpoint_path)
     return model, processor
