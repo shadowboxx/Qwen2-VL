@@ -480,7 +480,7 @@ Besides, We provide two methods for fine-grained control over the image size inp
 2. Define min_pixels and max_pixels: Images will be resized to maintain their aspect ratio within the range of min_pixels and max_pixels.
 
 ```python
-# min_pixels and max_pixels
+# resized_height and resized_width
 messages = [
     {
         "role": "user",
@@ -495,7 +495,7 @@ messages = [
         ],
     }
 ]
-# resized_height and resized_width
+# min_pixels and max_pixels
 messages = [
     {
         "role": "user",
@@ -994,7 +994,7 @@ This section reports the generation performance of quantized models (including G
 - MMBench_DEV_EN (Accuracy)
 - MathVista_MINI (Accuracy)
 
-We use [VLMEvalkit](https://github.com/kq-chen/VLMEvalKit/tree/add_qwen2vl) to evaluate all models.
+We use [VLMEvalkit](https://github.com/open-compass/VLMEvalKit) to evaluate all models.
 
 | Model Size | Quantization | MMMU | DocVQA | MMBench | MathVista  |
 | --- | --- | --- | --- | --- | --- |
