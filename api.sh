@@ -1,7 +1,4 @@
 export CUDA_LAUNCH_BLOCKING=1
 
-python -m vllm.entrypoints.openai.api_server --port 8080 \
---served-model-name Qwen2-VL-7B-Instruct \
---model /home/huyunliu/models/Qwen/Qwen2-VL-7B-Instruct-GPTQ-Int4 \
-
-# --quantization gptq \
+python openai_api.py --server-name 0.0.0.0 --server-port 8080 \
+--checkpoint-path /home/huyunliu/models/Qwen/Qwen2-VL-7B-Instruct

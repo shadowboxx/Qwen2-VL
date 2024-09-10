@@ -64,15 +64,18 @@ def _load_model_processor(args):
                                                                 torch_dtype='auto',
                                                                 attn_implementation='flash_attention_2',
                                                                 device_map=device_map,
-                                                                # quantization_config=nf4_config
+                                                                quantization_config=nf4_config
                                                                 )
     else:
         model = Qwen2VLForConditionalGeneration.from_pretrained(args.checkpoint_path, 
                                                                 device_map=device_map,
-                                                                # quantization_config=nf4_config
+                                                                quantization_config=nf4_config
                                                                 )
 
-    processor = AutoProcessor.from_pretrained(args.checkpoint_path)
+    min_pixels = 256 * 28 * 28
+    max_pixels = 2560 * 28 * 28
+
+    processor = AutoProcessor.from_pretrained(args.checkpoint_path, min_pixels=min_pixels, max_pixels=max_pixels)
     return model, processor
 
 
